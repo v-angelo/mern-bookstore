@@ -17,7 +17,7 @@ function Header() {
       <div className="grid grid-cols-3 p-3">
         {/* logo */}
         <div className="flex items-center">
-          <img className="w-10" src="/bookstoreIcon.ico" alt="logo" />
+          <img className="w-10" src="/booksIcon.png" alt="logo" />
           <h1 className="ms-2 text-2xl font-bold md:hidden">Bookstore</h1>
         </div>
         {/* title */}
