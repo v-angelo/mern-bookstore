@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import Home from "./user/pages/Home";
 import Contact from "./user/pages/Contact";
-import Books from "./user/pages/Contact";
+import Books from "./user/pages/Books";
 import Profile from "./user/pages/Profile";
 import View from "./user/pages/View";
 
