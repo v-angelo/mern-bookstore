@@ -1,14 +1,54 @@
+import { useFormik } from "formik";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import * as Yup from "yup";
+
+import { registerAPI } from "../services/allAPI";
 
 function Auth({ insideRegister }) {
   const [togglePasswordType, setTogglePasswordType] = useState(false);
 
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+
+    validationSchema: Yup.object({
+      username: Yup.string()
+        .min(3, "Username must atleast be 3 characters!")
+        .required("Required!"),
+      email: Yup.string().email("Invalid email!").required("Required!"),
+      password: Yup.string().required("Required!"),
+    }),
+
+    onSubmit: (values) => {
+      console.log(values);
+
+      if (insideRegister) {
+        console.log("Register api call");
+        handleRegister(values);
+      } else {
+        console.log("Login api call");
+      }
+    },
+  });
+
+  const handleRegister = async (userData) => {
+    const result = await registerAPI(userData);
+    console.log(result);
+
+    if (result.status == 201) {
+      alert("Registration Successful!! Please Login.");
+    }
+  };
+
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center bg-[url(/booksBg.jpg)] bg-cover bg-center text-white">
       {/* gradient overlay */}
-      <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0)_30%,rgba(0,0,0,0.7)_100%)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0)_30%,rgba(0,0,0,0.7)_100%)]"></div>
 
       {/* content */}
       <div className="relative z-10 p-10">
@@ -20,26 +60,51 @@ function Auth({ insideRegister }) {
             <FaUser className="text-3xl" />
           </div>
           <h1 className="text-2xl">{insideRegister ? "Register" : "Login"}</h1>
-          <form action="" className="my-5 w-full space-y-5">
+
+          <form
+            onSubmit={formik.handleSubmit}
+            className="my-5 w-full space-y-5"
+          >
             {/* username */}
             {insideRegister && (
-              <input
-                className="w-full bg-white p-2 text-black"
-                type="text"
-                placeholder="Username"
-              />
+              <>
+                <input
+                  name="username"
+                  value={formik.values.username}
+                  onChange={formik.handleChange}
+                  className="w-full bg-white p-2 text-black"
+                  type="text"
+                  placeholder="Username"
+                />
+                {formik.errors.username && (
+                  <div className="text-xs text-yellow-400">
+                    {formik.errors.username}
+                  </div>
+                )}
+              </>
             )}
 
             {/* email */}
             <input
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
               className="w-full bg-white p-2 text-black"
               type="email"
               placeholder="Email"
             />
+            {formik.errors.email && (
+              <div className="text-xs text-yellow-400">
+                {formik.errors.email}
+              </div>
+            )}
 
             {/* password */}
             <div className="relative">
               <input
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
                 className="w-full bg-white p-2 text-black"
                 type={togglePasswordType ? "text" : "password"}
                 placeholder="Password"
@@ -56,6 +121,11 @@ function Auth({ insideRegister }) {
                 />
               )}
             </div>
+            {formik.errors.password && (
+              <div className="text-xs text-yellow-400">
+                {formik.errors.password}
+              </div>
+            )}
 
             {/* forgot password */}
             <div className="mb-3 flex justify-between">
@@ -72,7 +142,10 @@ function Auth({ insideRegister }) {
             <div className="text-center">
               {/* login / register button */}
               {insideRegister ? (
-                <button className="w-full cursor-pointer rounded bg-green-700 p-2">
+                <button
+                  type="submit"
+                  className="w-full cursor-pointer rounded bg-green-700 p-2"
+                >
                   Register
                 </button>
               ) : (
