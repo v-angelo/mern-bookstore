@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaBars,
   FaFacebook,
@@ -10,6 +10,18 @@ import { Link } from "react-router-dom";
 
 function Header() {
   const [toggle, setToggle] = useState(false);
+  const [token, setToken] = useState("");
+  const [dp, setDp] = useState("");
+
+  useEffect(() => {
+    if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
+      const userToken = sessionStorage.getItem("token");
+      const user = JSON.parse(sessionStorage.getItem("user"));
+
+      setToken(userToken);
+      setDp(user.picture);
+    }
+  }, [token]);
 
   return (
     <>
@@ -30,13 +42,31 @@ function Header() {
           <FaTwitter />
           <FaFacebook />
           {/* login link */}
-          <Link
-            to={"/login"}
-            className="ms-3 flex items-center rounded border border-black p-2 hover:bg-black hover:text-white"
-          >
-            <FaUser className="me-1" />
-            Login
-          </Link>
+          {!token ? (
+            <Link
+              to={"/login"}
+              className="ms-3 flex items-center rounded border border-black p-2 hover:bg-black hover:text-white"
+            >
+              <FaUser className="me-1" />
+              Login
+            </Link>
+          ) : (
+            <div>
+              {/* profile icon */}
+              <button className="ms-5 cursor-pointer rounded p-1 shadow-sm hover:bg-gray-100">
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={
+                    dp == ""
+                      ? "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2205.jpg?semt=ais_hybrid&w=740&q=80"
+                      : dp
+                  }
+                  alt="profilePic"
+                />
+              </button>
+              {/* dropdown menu */}
+            </div>
+          )}
         </div>
       </div>
 

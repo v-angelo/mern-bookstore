@@ -9,3 +9,8 @@ export const registerAPI = async (userData) => {
 export const loginAPI = async (userData) => {
   return await apiService("POST", "/login", userData);
 };
+
+// google-login api: called by auth component when google login button clicked
+export const googleLoginAPI = async (userData) => {
+  return await apiService("POST", "/google-login", userData);
+};
