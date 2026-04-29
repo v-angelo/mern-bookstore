@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../../components/Footer";
 import { FaCircleCheck } from "react-icons/fa6";
@@ -10,6 +10,19 @@ import Purchase from "../components/Purchase";
 
 function Profile() {
   const [currentTab, setCurrentTab] = useState(1);
+  const [username, setUsername] = useState("");
+  const [dp, setDp] = useState("");
+  const [bio, setBio] = useState("");
+
+  useEffect(() => {
+    if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
+      const user = JSON.parse(sessionStorage.getItem("user"));
+
+      setDp(user?.picture);
+      setUsername(user?.username);
+      setBio(user?.bio);
+    }
+  }, []);
 
   return (
     <>
@@ -19,20 +32,23 @@ function Profile() {
       <div className="-mt-30 ml-20 h-55 w-55 rounded-full bg-white p-2">
         <img
           className="rounded-full"
-          src="https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2205.jpg?semt=ais_hybrid&w=740&q=80"
-          alt="profilePic"
+          src={
+            dp == ""
+              ? "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2205.jpg?semt=ais_hybrid&w=740&q=80"
+              : dp
+          }
         />
       </div>
 
       <section className="mt-5 justify-between px-20 md:flex">
         <div className="flex items-center">
-          <h1 className="text-2xl font-black md:text-3xl">Username</h1>
+          <h1 className="text-2xl font-black md:text-3xl">{username}</h1>
           <FaCircleCheck className="ms-3 text-blue-400" />
         </div>
         <Edit />
       </section>
 
-      <p className="mt-5 px-20 text-xl font-bold">bio</p>
+      <p className="mt-5 px-20 text-xl font-bold">{bio}</p>
 
       <p className="my-5 px-5 text-justify md:px-20">
         This is your personal space where you can manage your account, explore

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
   FaBars,
+  FaCog,
   FaFacebook,
   FaInstagram,
+  FaPowerOff,
   FaTwitter,
   FaUser,
 } from "react-icons/fa";
@@ -12,6 +14,8 @@ function Header() {
   const [toggle, setToggle] = useState(false);
   const [token, setToken] = useState("");
   const [dp, setDp] = useState("");
+  const [userId, setUserId] = useState("");
+  const [dropDown, setDropDown] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
@@ -19,7 +23,8 @@ function Header() {
       const user = JSON.parse(sessionStorage.getItem("user"));
 
       setToken(userToken);
-      setDp(user.picture);
+      setDp(user?.picture);
+      setUserId(user?._id);
     }
   }, [token]);
 
@@ -41,6 +46,7 @@ function Header() {
           <FaInstagram />
           <FaTwitter />
           <FaFacebook />
+
           {/* login link */}
           {!token ? (
             <Link
@@ -53,7 +59,10 @@ function Header() {
           ) : (
             <div>
               {/* profile icon */}
-              <button className="ms-5 cursor-pointer rounded p-1 shadow-sm hover:bg-gray-100">
+              <button
+                onClick={() => setDropDown(!dropDown)}
+                className="ms-5 cursor-pointer rounded p-1 shadow-sm hover:bg-gray-100"
+              >
                 <img
                   className="h-10 w-10 rounded-full"
                   src={
@@ -64,7 +73,25 @@ function Header() {
                   alt="profilePic"
                 />
               </button>
+
               {/* dropdown menu */}
+              {dropDown && (
+                <div className="absolute right-0 z-10 mt-2 w-40 rounded bg-white p-2 shadow ring-1 ring-black/5 focus:outline-hidden">
+                  {/* profile link */}
+                  <Link
+                    to={`/profile/${userId}`}
+                    className="flex items-center px-3 py-2 text-sm text-gray-600"
+                  >
+                    <FaCog className="me-1" />
+                    Profile
+                  </Link>
+
+                  {/* logout btn */}
+                  <button className="flex cursor-pointer items-center px-3 py-2 text-sm text-gray-600">
+                    <FaPowerOff className="me-1" /> Logout
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -77,13 +104,53 @@ function Header() {
           <button onClick={() => setToggle(!toggle)}>
             <FaBars className="cursor-pointer" />
           </button>
-          <Link
-            to={"/login"}
-            className="ms-3 flex items-center rounded border border-black p-2 hover:bg-black hover:text-white"
-          >
-            <FaUser className="me-1" />
-            Login
-          </Link>
+
+          {!token ? (
+            <Link
+              to={"/login"}
+              className="ms-3 flex items-center rounded border border-black p-2 hover:bg-black hover:text-white"
+            >
+              <FaUser className="me-1" />
+              Login
+            </Link>
+          ) : (
+            <div>
+              {/* profile icon */}
+              <button
+                onClick={() => setDropDown(!dropDown)}
+                className="ms-5 cursor-pointer rounded p-1 shadow-sm hover:bg-gray-100"
+              >
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={
+                    dp == ""
+                      ? "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2205.jpg?semt=ais_hybrid&w=740&q=80"
+                      : dp
+                  }
+                  alt="profilePic"
+                />
+              </button>
+
+              {/* dropdown menu */}
+              {dropDown && (
+                <div className="absolute right-0 z-10 mt-2 w-40 rounded bg-white p-2 shadow ring-1 ring-black/5 focus:outline-hidden">
+                  {/* profile link */}
+                  <Link
+                    to={`/profile/${userId}`}
+                    className="flex items-center px-3 py-2 text-sm text-gray-600"
+                  >
+                    <FaCog className="me-1" />
+                    Profile
+                  </Link>
+
+                  {/* logout btn */}
+                  <button className="flex cursor-pointer items-center px-3 py-2 text-sm text-gray-600">
+                    <FaPowerOff className="me-1" /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <ul className={toggle ? "flex flex-col" : "hidden md:flex"}>
           <li>
