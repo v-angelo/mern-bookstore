@@ -37,7 +37,7 @@ function Auth({ insideRegister }) {
     }),
 
     onSubmit: (values, { resetForm }) => {
-      console.log(values);
+      // console.log(values);
 
       if (insideRegister) {
         console.log("Register api call");
@@ -53,7 +53,7 @@ function Auth({ insideRegister }) {
 
   const handleLogin = async (userData) => {
     const result = await loginAPI(userData);
-    console.log(result);
+    // console.log(result);
 
     if (result.status == 200) {
       toast.success("Login Successful!!");

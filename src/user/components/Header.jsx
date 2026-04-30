@@ -9,6 +9,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
 
 function Header() {
   const [toggle, setToggle] = useState(false);
@@ -66,9 +67,11 @@ function Header() {
                 <img
                   className="h-10 w-10 rounded-full"
                   src={
-                    dp == ""
+                    dp === ""
                       ? "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2205.jpg?semt=ais_hybrid&w=740&q=80"
-                      : dp
+                      : dp.startsWith("https://lh3.googleusercontent.com/")
+                        ? dp
+                        : `${axiosInstance.defaults.baseURL}/uploads/${dp}`
                   }
                   alt="profilePic"
                 />
@@ -123,9 +126,11 @@ function Header() {
                 <img
                   className="h-10 w-10 rounded-full"
                   src={
-                    dp == ""
+                    dp === ""
                       ? "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2205.jpg?semt=ais_hybrid&w=740&q=80"
-                      : dp
+                      : dp.startsWith("https://lh3.googleusercontent.com/")
+                        ? dp
+                        : `${axiosInstance.defaults.baseURL}/uploads/${dp}`
                   }
                   alt="profilePic"
                 />
