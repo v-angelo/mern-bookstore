@@ -14,3 +14,8 @@ export const loginAPI = async (userData) => {
 export const googleLoginAPI = async (userData) => {
   return await apiService("POST", "/google-login", userData);
 };
+
+// useredit api: called by Edit component when update button is clicked
+export const userUpdateAPI = async (userId, userData) => {
+  return await apiService("PUT", `/user/${userId}`, userData);
+};
