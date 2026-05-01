@@ -19,3 +19,8 @@ export const googleLoginAPI = async (userData) => {
 export const userUpdateAPI = async (userId, userData) => {
   return await apiService("PUT", `/user/${userId}`, userData);
 };
+
+// add book api: called by UploadBook component when add button is clicked
+export const addBookAPI = async (bookDetails) => {
+  return await apiService("POST", `/books`, bookDetails);
+};
