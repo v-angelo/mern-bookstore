@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Header from "../components/Header";
 import Footer from "../../components/Footer";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { getHomePageBooksAPI } from "../../services/allAPI";
 
 function Home() {
+  const [homeBooks, setHomeBooks] = useState([]);
+
+  useEffect(() => {
+    getHomePageBooks();
+  }, []);
+
+  const getHomePageBooks = async () => {
+    const result = await getHomePageBooksAPI();
+
+    if (result.status == 200) {
+      setHomeBooks(result.data);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -34,18 +49,28 @@ function Home() {
 
         <div className="my-10 w-full grid-cols-4 md:grid">
           {/* duplicate according to number of books */}
-          <div className="m-4 rounded p-3 shadow md:my-0">
-            <img
-              className="h-75 w-full object-contain"
-              src="https://tmm.chicagodistributioncenter.com/IsbnImages/9780226822952.jpg"
-              alt="bookImg"
-            />
-            <div className="mt-4 flex flex-col items-center justify-center">
-              <h2 className="text-xl font-bold text-blue-700">Author</h2>
-              <h3 className="text-lg">Title</h3>
-              <p className="font-bold text-red-500">Price</p>
-            </div>
-          </div>
+          {homeBooks.length > 0 ? (
+            homeBooks?.map((book) => (
+              <div key={book?._id} className="m-4 rounded p-3 shadow md:my-0">
+                <img
+                  className="h-75 w-full object-contain"
+                  src={book?.imageURL}
+                  alt="bookImg"
+                />
+                <div className="mt-4 flex flex-col items-center justify-center">
+                  <h2 className="text-xl font-bold text-blue-700">
+                    {book?.author}
+                  </h2>
+                  <h3 className="text-lg">{book?.title}</h3>
+                  <p className="font-bold text-red-500">
+                    ${book?.discountPrice}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="my-3 text-center font-bold">Loading...</p>
+          )}
         </div>
 
         <div className="my-10 text-center">
