@@ -44,3 +44,8 @@ export const getAllUserBooksAPI = async () => {
 export const getAllUserBoughtBooksAPI = async () => {
   return await apiService("GET", "/bought-books", {});
 };
+
+// view a single book details: called by View component when it loads
+export const getBookDetailsAPI = async (bookID) => {
+  return await apiService("GET", `/book-details/${bookID}`, {});
+};

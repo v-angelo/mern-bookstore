@@ -1,11 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../../components/Footer";
 import { FaBackward, FaCamera, FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { getBookDetailsAPI } from "../../services/allAPI";
+import axiosInstance from "../../api/axiosInstance";
 
 function View() {
   const [modal, setModal] = useState(false);
+  const { id } = useParams();
+
+  const [bookDetails, setBookDetails] = useState(null);
+
+  // console.log(bookDetails);
+
+  useEffect(() => {
+    getBookDetails(id);
+  }, []);
+
+  const getBookDetails = async (bookID) => {
+    const result = await getBookDetailsAPI(bookID);
+
+    if (result.status == 200) {
+      // console.log(result.data);
+
+      setBookDetails(result.data);
+    }
+  };
 
   return (
     <>
@@ -17,17 +39,13 @@ function View() {
           <div className="grid-cols-4 gap-x-10 md:grid">
             {/* image */}
             <div className="col-span-1">
-              <img
-                src="https://tmm.chicagodistributioncenter.com/IsbnImages/9780226822952.jpg"
-                alt="book"
-                className="w-full"
-              />
+              <img src={bookDetails?.imageURL} alt="book" className="w-full" />
             </div>
 
             {/* book details */}
             <div className="col-span-3">
               <div className="mt-5 flex justify-between md:mt-0">
-                <h2 className="text-3xl font-bold">Title</h2>
+                <h2 className="text-3xl font-bold">{bookDetails?.title}</h2>
                 <button
                   onClick={() => setModal(true)}
                   className="cursor-pointer text-gray-400"
@@ -36,22 +54,36 @@ function View() {
                 </button>
               </div>
 
-              <h3 className="my-5 text-lg text-blue-500">Author Name</h3>
+              <h3 className="my-5 text-lg text-blue-500">
+                {bookDetails?.author}
+              </h3>
 
               <div className="grid grid-cols-1 gap-x-2 gap-y-10 md:grid-cols-3">
                 <h3 className="font-medium">
-                  Publisher: TechWave Publications
+                  Publisher: {bookDetails?.publisher}
                 </h3>
-                <h3 className="font-medium">Language: English</h3>
-                <h3 className="font-medium">No. of Pages: 290</h3>
-                <h3 className="font-medium">Category: Technology</h3>
-                <h3 className="font-medium">ISBN: 978-0-91234-45-9</h3>
-                <h3 className="font-medium">Original Price: 390</h3>
-                <h3 className="font-medium">xyz123@gmail.com</h3>
+                <h3 className="font-medium">
+                  Language: {bookDetails?.language}
+                </h3>
+                <h3 className="font-medium">
+                  No. of Pages: {bookDetails?.pages}
+                </h3>
+                <h3 className="font-medium">
+                  Category: {bookDetails?.category}
+                </h3>
+                <h3 className="font-medium">ISBN: {bookDetails?.isbn}</h3>
+                <h3 className="font-medium">
+                  Original Price: ${bookDetails?.price}
+                </h3>
+                <h3 className="font-medium">
+                  Seller Mail: {bookDetails?.sellerMail}
+                </h3>
               </div>
 
               <div className="my-4 md:my-10">
-                <h3 className="text-lg font-medium">Abstract:</h3>
+                <h3 className="text-lg font-medium">
+                  Abstract: {bookDetails?.abstract}
+                </h3>
               </div>
 
               <div className="flex justify-end">
@@ -63,7 +95,7 @@ function View() {
                 </Link>
 
                 <button className="ms-5 cursor-pointer rounded bg-green-700 p-2 font-black text-white">
-                  Buy $89
+                  Buy ${bookDetails?.discountPrice}
                 </button>
               </div>
             </div>
@@ -91,13 +123,17 @@ function View() {
                       books.
                     </p>
 
-                    <div className="my-4 flex-wrap md:flex">
+                    <div className="my-4 flex-wrap gap-5 md:flex">
                       {/* duplicate image */}
-                      <img
-                        src="https://tmm.chicagodistributioncenter.com/IsbnImages/9780226822952.jpg"
-                        alt=""
-                        className="mb-3 w-25 md:me-2 md:mt-0 md:w-50"
-                      />
+
+                      {bookDetails?.uploadImages?.map((bookCover, index) => (
+                        <img
+                          key={`${index}-${bookCover}`}
+                          src={`${axiosInstance.defaults.baseURL}/uploads/${bookCover}`}
+                          alt="book cover image"
+                          className="mb-3 w-25 md:me-2 md:mt-0 md:w-50"
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
