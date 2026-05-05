@@ -21,7 +21,7 @@ function Purchase() {
   return (
     <div className="my-10 rounded p-10 shadow">
       {/* duplicate uploaded books */}
-      {userBoughtBooks?.length > 0 &&
+      {userBoughtBooks?.length > 0 ? (
         userBoughtBooks?.map((book) => (
           <div key={book?._id} className="mt-4 rounded-lg bg-gray-100 p-5">
             <div className="grid-cols-[3fr_1fr] md:grid">
@@ -54,7 +54,10 @@ function Purchase() {
               </div>
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <div>You haven't purchased any books!</div>
+      )}
     </div>
   );
 }

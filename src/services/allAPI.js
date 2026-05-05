@@ -31,8 +31,8 @@ export const getHomePageBooksAPI = async () => {
 };
 
 // all-books: getAllBooksAPI - called by Books component when page loads
-export const getAllBooksAPI = async () => {
-  return await apiService("GET", "/all-books", {});
+export const getAllBooksAPI = async (searchKey) => {
+  return await apiService("GET", `/all-books?search=${searchKey}`, {});
 };
 
 // user uploaded books: called by BookStatus component when it opens
@@ -48,4 +48,9 @@ export const getAllUserBoughtBooksAPI = async () => {
 // view a single book details: called by View component when it loads
 export const getBookDetailsAPI = async (bookID) => {
   return await apiService("GET", `/book-details/${bookID}`, {});
+};
+
+// called by BookStatus component when delete button is clicked
+export const deleteUserUploadBooksAPI = async (bookID) => {
+  return await apiService("DELETE", `/books/${bookID}`, {});
 };

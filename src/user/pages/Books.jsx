@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Footer from "../../components/Footer";
 import { getAllBooksAPI } from "../../services/allAPI";
+import { searchContext } from "../../context/ShareContext";
 
 function Books() {
+  const { searchKey, setSearchKey } = useContext(searchContext);
+
   const [toggle, setToggle] = useState(false);
   const [token, setToken] = useState("");
   const [allBooks, setAllBooks] = useState([]);
@@ -21,10 +24,10 @@ function Books() {
       setToken(userToken);
       getBooks();
     }
-  }, []);
+  }, [searchKey]);
 
   const getBooks = async () => {
-    const result = await getAllBooksAPI();
+    const result = await getAllBooksAPI(searchKey);
 
     if (result.status == 200) {
       setAllBooks(result.data);
@@ -56,6 +59,8 @@ function Books() {
             <h1 className="my-5 text-3xl font-bold">All Books</h1>
             <div className="my-5 flex">
               <input
+                value={searchKey}
+                onChange={(e) => setSearchKey(e.target.value)}
                 type="text"
                 className="border border-gray-200 p-2 md:w-100"
                 placeholder="Search by Book Title"

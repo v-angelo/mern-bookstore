@@ -126,14 +126,18 @@ function View() {
                     <div className="my-4 flex-wrap gap-5 md:flex">
                       {/* duplicate image */}
 
-                      {bookDetails?.uploadImages?.map((bookCover, index) => (
-                        <img
-                          key={`${index}-${bookCover}`}
-                          src={`${axiosInstance.defaults.baseURL}/uploads/${bookCover}`}
-                          alt="book cover image"
-                          className="mb-3 w-25 md:me-2 md:mt-0 md:w-50"
-                        />
-                      ))}
+                      {bookDetails?.uploadImages?.length > 0 ? (
+                        bookDetails?.uploadImages?.map((bookCover, index) => (
+                          <img
+                            key={`${index}-${bookCover}`}
+                            src={`${axiosInstance.defaults.baseURL}/uploads/${bookCover}`}
+                            alt="book cover image"
+                            className="mb-3 w-25 md:me-2 md:mt-0 md:w-50"
+                          />
+                        ))
+                      ) : (
+                        <div>No extra book covers available...</div>
+                      )}
                     </div>
                   </div>
                 </div>

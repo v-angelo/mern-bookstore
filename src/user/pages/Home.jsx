@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Header from "../components/Header";
 import Footer from "../../components/Footer";
 import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getHomePageBooksAPI } from "../../services/allAPI";
+import { searchContext } from "../../context/ShareContext";
+import { ToastContainer, toast } from "react-toastify";
 
 function Home() {
+  const { searchKey, setSearchKey } = useContext(searchContext);
   const [homeBooks, setHomeBooks] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getHomePageBooks();
+    setSearchKey("");
   }, []);
 
   const getHomePageBooks = async () => {
@@ -18,6 +23,22 @@ function Home() {
 
     if (result.status == 200) {
       setHomeBooks(result.data);
+    }
+  };
+
+  const handleSearch = (e) => {
+    if (!searchKey) {
+      toast.warning("Please input Book title on the search bar!");
+    } else if (!sessionStorage.getItem("token")) {
+      toast.warning("Please login!");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2500);
+    } else if (searchKey && sessionStorage.getItem("token")) {
+      navigate("/books");
+    } else {
+      toast.error("Something went wrong!!");
     }
   };
 
@@ -31,11 +52,15 @@ function Home() {
           <p className="max-md:text-sm">Gift your family and friends a book</p>
           <div className="mt-9 flex items-center">
             <input
+              onChange={(e) => setSearchKey(e.target.value)}
               type="text"
               placeholder="Search a Book"
               className="rounded-3xl bg-white p-2 text-black md:w-100"
             />
-            <FaSearch className="curosr-pointer -ml-10 text-gray-500" />
+            <FaSearch
+              onClick={handleSearch}
+              className="-ml-10 cursor-pointer text-gray-500"
+            />
           </div>
         </div>
       </section>
@@ -146,6 +171,9 @@ function Home() {
         </div>
       </section>
       <Footer />
+
+      {/* toaster */}
+      <ToastContainer position="top-center" theme="colored" autoClose={3000} />
     </>
   );
 }
