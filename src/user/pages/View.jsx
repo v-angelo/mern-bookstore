@@ -4,8 +4,9 @@ import Footer from "../../components/Footer";
 import { FaBackward, FaCamera, FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { getBookDetailsAPI } from "../../services/allAPI";
+import { buyBookAPI, getBookDetailsAPI } from "../../services/allAPI";
 import axiosInstance from "../../api/axiosInstance";
+import { loadStripe } from "@stripe/stripe-js";
 
 function View() {
   const [modal, setModal] = useState(false);
@@ -27,6 +28,17 @@ function View() {
 
       setBookDetails(result.data);
     }
+  };
+
+  const makePayment = async () => {
+    // load stripe
+    const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PK);
+
+    // api call
+    const result = await buyBookAPI(id);
+    const { checkOutURL } = result.data;
+
+    window.location.href = checkOutURL;
   };
 
   return (
@@ -94,7 +106,10 @@ function View() {
                   <FaBackward className="me-2" /> Back
                 </Link>
 
-                <button className="ms-5 cursor-pointer rounded bg-green-700 p-2 font-black text-white">
+                <button
+                  onClick={makePayment}
+                  className="ms-5 cursor-pointer rounded bg-green-700 p-2 font-black text-white"
+                >
                   Buy ${bookDetails?.discountPrice}
                 </button>
               </div>

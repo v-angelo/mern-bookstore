@@ -9,7 +9,7 @@ import ShareContext from "./context/ShareContext.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <GoogleOAuthProvider clientId="434114850197-dvtqd91ioo8qvgmf8hg9dtid72mcicpo.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <ShareContext>
           <App />
         </ShareContext>

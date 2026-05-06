@@ -123,6 +123,9 @@ function Books() {
                     <div
                       key={book?._id}
                       className="m-4 rounded p-3 shadow md:mb-2"
+                      hidden={
+                        book?.status == "pending" || book?.status == "sold"
+                      }
                     >
                       <img
                         className="w-full object-contain"
