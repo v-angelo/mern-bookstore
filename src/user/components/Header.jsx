@@ -8,7 +8,7 @@ import {
   FaTwitter,
   FaUser,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 
 function Header() {
@@ -17,6 +17,20 @@ function Header() {
   const [dp, setDp] = useState("");
   const [userId, setUserId] = useState("");
   const [dropDown, setDropDown] = useState(false);
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    sessionStorage.clear();
+
+    setToggle(false);
+    setToken("");
+    setDp("");
+    setUserId("");
+    setDropDown(false);
+
+    navigate("/");
+  };
 
   useEffect(() => {
     if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
@@ -90,7 +104,10 @@ function Header() {
                   </Link>
 
                   {/* logout btn */}
-                  <button className="flex cursor-pointer items-center px-3 py-2 text-sm text-gray-600">
+                  <button
+                    onClick={logout}
+                    className="flex cursor-pointer items-center px-3 py-2 text-sm text-gray-600"
+                  >
                     <FaPowerOff className="me-1" /> Logout
                   </button>
                 </div>
@@ -149,7 +166,10 @@ function Header() {
                   </Link>
 
                   {/* logout btn */}
-                  <button className="flex cursor-pointer items-center px-3 py-2 text-sm text-gray-600">
+                  <button
+                    onClick={logout}
+                    className="flex cursor-pointer items-center px-3 py-2 text-sm text-gray-600"
+                  >
                     <FaPowerOff className="me-1" /> Logout
                   </button>
                 </div>

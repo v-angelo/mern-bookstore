@@ -18,7 +18,7 @@ function PaymentSuccess() {
 
             <p className="my-10 text-2xl">
               Thank you for purchasing with BookStore. Hope you have good time
-              wiht us...
+              with us...
             </p>
 
             <Link

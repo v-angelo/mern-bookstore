@@ -59,3 +59,23 @@ export const deleteUserUploadBooksAPI = async (bookID) => {
 export const buyBookAPI = async (id) => {
   return await apiService("PUT", `/books/${id}/buy`, {});
 };
+
+// admin update api: called by Edit component when update button is clicked
+export const adminUpdateAPI = async (adminId, adminData) => {
+  return await apiService("PUT", `/profile/${adminId}`, adminData);
+};
+
+// get req by Resource component when tab becomes 2
+export const userListAPI = async () => {
+  return await apiService("GET", "/user-list", {});
+};
+
+// get req by Resource componet when tab becomes 1
+export const bookListAPI = async () => {
+  return await apiService("GET", "book-list", {});
+};
+
+// update status of book, called by Resource component when approved button in clicked
+export const editBookStatusAPI = async (id) => {
+  return await apiService("PUT", `books/${id}`, {});
+};
