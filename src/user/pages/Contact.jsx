@@ -1,14 +1,54 @@
-import React from "react";
+import React, { useRef } from "react";
 import Header from "../components/Header";
 import Footer from "../../components/Footer";
 import { FaLocationPin } from "react-icons/fa6";
 import { FaEnvelope, FaPaperPlane, FaPhone } from "react-icons/fa";
+import emailjs from "@emailjs/browser";
+import { ToastContainer, toast } from "react-toastify";
 
 function Contact() {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    const { name, email, title } = form.current;
+
+    if (name.value && email.value && title.value) {
+      emailjs
+        .sendForm(
+          import.meta.env.VITE_EMAIL_SERVICE_ID,
+          import.meta.env.VITE_EMAIL_TEMPLATE_ID,
+          form.current,
+          {
+            publicKey: import.meta.env.VITE_EMAIL_PUBLIC_KEY,
+          },
+        )
+        .then(
+          () => {
+            console.log("SUCCESS!");
+            toast.success(
+              "Thank you for contacting us... Our team will get back to you soon.",
+            );
+
+            name.value = "";
+            email.value = "";
+            title.value = "";
+          },
+          (error) => {
+            console.log("FAILED...", error.text);
+          },
+        );
+    } else {
+      toast.warning("Please fill the form completely...");
+    }
+  };
+
   return (
     <>
       <Header />
-      <section>
+
+      <section className="container mx-auto">
         <h1 className="my-5 text-center text-3xl font-bold">Contact</h1>
         <p className="px-2 text-justify">
           Have questions, feedback, or need help finding the perfect book? We’d
@@ -54,9 +94,10 @@ function Contact() {
           <div className="bg-gray-100 p-5 text-center">
             <h1 className="font-semi-bold text-2xl">Send Us Message!</h1>
             {/* form */}
-            <form>
+            <form ref={form} onSubmit={sendEmail}>
               <div className="mt-10 mb-5">
                 <input
+                  name="name"
                   type="text"
                   placeholder="Name"
                   className="w-full bg-white p-2"
@@ -65,6 +106,7 @@ function Contact() {
 
               <div className="mt-10 mb-5">
                 <input
+                  name="email"
                   type="email"
                   placeholder="E Mail"
                   className="w-full bg-white p-2"
@@ -73,6 +115,7 @@ function Contact() {
 
               <div className="mt-10 mb-5">
                 <textarea
+                  name="title"
                   type="text"
                   placeholder="Message"
                   className="w-full bg-white p-2"
@@ -80,7 +123,10 @@ function Contact() {
               </div>
 
               <div className="my-5">
-                <button className="flex w-full items-center justify-center bg-black p-2 text-lg text-white">
+                <button
+                  type="submit"
+                  className="flex w-full items-center justify-center bg-black p-2 text-lg text-white"
+                >
                   Submit <FaPaperPlane className="ms-2" />
                 </button>
               </div>
@@ -101,7 +147,11 @@ function Contact() {
           </div>
         </div>
       </section>
+
       <Footer />
+
+      {/* toaster */}
+      <ToastContainer position="top-center" theme="colored" autoClose={3000} />
     </>
   );
 }
