@@ -79,3 +79,8 @@ export const bookListAPI = async () => {
 export const editBookStatusAPI = async (id) => {
   return await apiService("PUT", `books/${id}`, {});
 };
+
+// post request by UploadBook Componet when title entered in input field
+export const aiBookDetailsAPI = async (title) => {
+  return await apiService("POST", `/books-ai`, { title });
+};

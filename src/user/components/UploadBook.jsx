@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
-import { addBookAPI } from "../../services/allAPI";
+import { addBookAPI, aiBookDetailsAPI } from "../../services/allAPI";
+import useDebounce from "../../hooks/useDebounce";
 
 function UploadBook() {
   const [bookDetails, setBookDetails] = useState({
@@ -22,6 +23,20 @@ function UploadBook() {
 
   const [preview, setPreview] = useState("");
   const [previewList, setPreviewList] = useState([]);
+
+  const debouncedTitleSearch = useDebounce(bookDetails.title, 1000);
+
+  useEffect(() => {
+    if (debouncedTitleSearch) {
+      console.log("api call");
+    }
+  }, [debouncedTitleSearch]);
+
+  const generateBookAbstract = async () => {
+    const result = await aiBookDetailsAPI(debouncedTitleSearch);
+
+    console.log(result);
+  };
 
   const handleUploadBookImage = (e) => {
     const imageFile = e.target.files[0];
