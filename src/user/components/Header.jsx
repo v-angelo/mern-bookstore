@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FaBars,
   FaCog,
@@ -10,8 +10,12 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
+import { routeContext } from "../../context/RouteGuardContext";
 
 function Header() {
+  const { role, setRole, authorizedUser, setAuthorizedUser } =
+    useContext(routeContext);
+
   const [toggle, setToggle] = useState(false);
   const [token, setToken] = useState("");
   const [dp, setDp] = useState("");
@@ -23,6 +27,7 @@ function Header() {
   const logout = () => {
     sessionStorage.clear();
 
+    setAuthorizedUser(false);
     setToggle(false);
     setToken("");
     setDp("");

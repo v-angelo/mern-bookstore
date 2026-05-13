@@ -1,7 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { routeContext } from "../context/RouteGuardContext";
 
 function Pnf() {
+  const { role, setRole, authorizedUser, setAuthorizedUser } =
+    useContext(routeContext);
+
+  const navigate = useNavigate();
+
+  const backHome = () => {
+    if (role === "user") {
+      navigate("/");
+    } else {
+      navigate("/admin");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <img
@@ -11,9 +25,18 @@ function Pnf() {
       />
 
       <div>
-        <Link to={"/"} className="mt-5 rounded bg-black px-3 py-2 text-white">
-          Home
-        </Link>
+        {authorizedUser ? (
+          <button
+            onClick={backHome}
+            className="mt-5 bg-black px-3 py-2 text-white"
+          >
+            Home
+          </button>
+        ) : (
+          <Link to={"/"} className="mt-5 rounded bg-black px-3 py-2 text-white">
+            Home
+          </Link>
+        )}
       </div>
     </div>
   );

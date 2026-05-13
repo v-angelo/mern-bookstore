@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaEye, FaEyeSlash, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,8 +10,12 @@ import { googleLoginAPI, loginAPI, registerAPI } from "../services/allAPI";
 
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { routeContext } from "../context/RouteGuardContext";
 
 function Auth({ insideRegister }) {
+  const { role, setRole, authorizedUser, setAuthorizedUser } =
+    useContext(routeContext);
+
   const navigate = useNavigate();
   const [togglePasswordType, setTogglePasswordType] = useState(false);
 
@@ -61,10 +65,14 @@ function Auth({ insideRegister }) {
       sessionStorage.setItem("token", result.data.token);
       sessionStorage.setItem("user", JSON.stringify(result.data.user));
 
+      setAuthorizedUser(true);
+
       setTimeout(() => {
         if (result.data.user.role == "admin") {
+          setRole("admin");
           navigate("/admin");
         } else {
+          setRole("user");
           navigate("/");
         }
       }, 2500);
@@ -107,10 +115,14 @@ function Auth({ insideRegister }) {
       sessionStorage.setItem("token", result.data.token);
       sessionStorage.setItem("user", JSON.stringify(result.data.user));
 
+      setAuthorizedUser(true);
+
       setTimeout(() => {
         if (result.data.user.role == "admin") {
+          setRole("admin");
           navigate("/admin");
         } else {
+          setRole("user");
           navigate("/");
         }
       }, 2500);

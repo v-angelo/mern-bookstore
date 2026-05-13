@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
-import { addBookAPI, aiBookDetailsAPI } from "../../services/allAPI";
+import {
+  addBookAPI,
+  aiBookDetailsAPI,
+  getBookDetailsAPI,
+} from "../../services/allAPI";
 import useDebounce from "../../hooks/useDebounce";
 
 function UploadBook() {
@@ -29,6 +33,8 @@ function UploadBook() {
   useEffect(() => {
     if (debouncedTitleSearch) {
       console.log("api call");
+
+      generateBookAbstract();
     }
   }, [debouncedTitleSearch]);
 
@@ -36,6 +42,8 @@ function UploadBook() {
     const result = await aiBookDetailsAPI(debouncedTitleSearch);
 
     console.log(result);
+
+    setBookDetails({ ...bookDetails, abstract: result.data.content });
   };
 
   const handleUploadBookImage = (e) => {
