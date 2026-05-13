@@ -32,7 +32,7 @@ function UploadBook() {
 
   useEffect(() => {
     if (debouncedTitleSearch) {
-      console.log("api call");
+      console.log("AI api call");
 
       generateBookAbstract();
     }
@@ -41,7 +41,7 @@ function UploadBook() {
   const generateBookAbstract = async () => {
     const result = await aiBookDetailsAPI(debouncedTitleSearch);
 
-    console.log(result);
+    // console.log(result);
 
     setBookDetails({ ...bookDetails, abstract: result.data.content });
   };
